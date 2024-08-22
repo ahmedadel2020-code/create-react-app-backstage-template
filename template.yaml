@@ -80,6 +80,7 @@ spec:
       name: Create Cloud Run GitHub Action
       action: fetch:plain
       input:
+        url: inline
         targetPath: .github/workflows/google-cloudrun-docker.yaml
         contents: |
           name: Build and Deploy to Cloud Run
