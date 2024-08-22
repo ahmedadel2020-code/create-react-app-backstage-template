@@ -84,7 +84,13 @@ spec:
           description: ${{ parameters.description }}
           destination: ${{ parameters.repoUrl | parseRepoUrl }}
           owner: ${{ parameters.owner }}
-
+          
+    - id: create-workflow-dir
+      name: Create workflows directory
+      action: fs:mkdir
+      input:
+        directory: .github/workflows
+    
     - id: cloudrun-yaml
       name: Create Cloud Run GitHub Action
       action: fs:write
