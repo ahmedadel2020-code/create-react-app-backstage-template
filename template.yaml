@@ -36,7 +36,6 @@ spec:
     - title: Choose a location
       required:
         - repoUrl
-        - secrets
       properties:
         repoUrl:
           title: Repository Location
@@ -45,10 +44,6 @@ spec:
           ui:options:
             allowedHosts:
               - github.com
-        secrets:
-          title: Set GitHub secrets
-          type: string
-          description: Set JSON Secrets of Github repo
 
     - title: Deployment Configuration
       required:
@@ -97,7 +92,28 @@ spec:
           GAR_LOCATION: ${{ parameters.gar_location }}
           SERVICE_NAME: ${{ parameters.service_name }}
           REGION: ${{ parameters.region }}
-          SECRETS: ${{ parameters.secrets }}
+
+    - id: set-secrets
+      name: Set GitHub Secrets
+      action: execute
+      input:
+        shell: bash
+        script: |
+          GITHUB_API_URL="https://api.github.com"
+          REPO=${{ parameters.repoUrl | parseRepoUrl }}
+          OWNER=${{ REPO.owner }}
+          REPO_NAME=${{ REPO.repo }}
+          TOKEN=${{ secrets.GITHUB_TOKEN }}
+          GCP_CREDENTIALS_JSON='${{ parameters.secrets }}'
+
+          # Base64 encode the GCP_CREDENTIALS_JSON
+          GCP_CREDENTIALS_B64=$(echo -n "$GCP_CREDENTIALS_JSON" | base64)
+
+          # Set the GCP_CREDENTIALS secret
+          curl -X PUT -H "Authorization: token $TOKEN" \
+          -H "Accept: application/vnd.github.v3+json" \
+          $GITHUB_API_URL/repos/$OWNER/$REPO_NAME/actions/secrets/GCP_CREDENTIALS \
+          -d '{"encrypted_value":"'"$GCP_CREDENTIALS_B64"'"}'
 
     
     - id: publish
