@@ -36,7 +36,6 @@ spec:
     - title: Choose a location
       required:
         - repoUrl
-        - secrets
       properties:
         repoUrl:
           title: Repository Location
@@ -45,10 +44,6 @@ spec:
           ui:options:
             allowedHosts:
               - github.com
-        secrets:
-          title: Set GitHub secrets
-          type: object
-          description: Set JSON Secrets of Github repo
 
     - title: Deployment Configuration
       required:
@@ -97,7 +92,6 @@ spec:
           GAR_LOCATION: ${{ parameters.gar_location }}
           SERVICE_NAME: ${{ parameters.service_name }}
           REGION: ${{ parameters.region }}
-          SECRETS: ${{ parameters.secrets }}
 
     
     - id: publish
@@ -108,7 +102,6 @@ spec:
           - github.com
         description: This is ${{ parameters.component_id }}
         repoUrl: ${{ parameters.repoUrl }}
-        secrets: ${{ parameters.secrets }}
 
     - id: register
       name: Register
