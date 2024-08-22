@@ -47,7 +47,7 @@ spec:
               - github.com
         secrets:
           title: Set GitHub secrets
-          type: string
+          type: object
           description: Set JSON Secrets of Github repo
 
     - title: Deployment Configuration
