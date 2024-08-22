@@ -73,15 +73,22 @@ spec:
           title: Cloud Run Region
           type: string
           description: The region where the Cloud Run service will be deployed.
-
+    
+    - title: GCP Credentials
+      required:
+        - gcp_credentials
+      properties:
+        gcp_credentials:
+          title: GCP Service Account Key
+          type: string
+          description: Base64 encoded GCP service account key JSON
+          ui:widget: textarea
   steps:
     - id: template
       name: Fetch Skeleton + Template
       action: fetch:template
       input:
         url: ./skeleton
-        copyWithoutRender:
-          - .github/workflows/*
         values:
           component_id: ${{ parameters.component_id }}
           description: ${{ parameters.description }}
@@ -102,6 +109,14 @@ spec:
           - github.com
         description: This is ${{ parameters.component_id }}
         repoUrl: ${{ parameters.repoUrl }}
+        repoVariables:
+          PROJECT_ID: ${{ parameters.project_id }}
+          GAR_NAME: ${{ parameters.gar_name }}
+          GAR_LOCATION: ${{ parameters.gar_location }}
+          SERVICE_NAME: ${{ parameters.service_name }}
+          REGION: ${{ parameters.region }}
+        secrets:
+          GCP_CREDENTIALS: ${{ parameters.gcp_credentials }}
 
     - id: register
       name: Register

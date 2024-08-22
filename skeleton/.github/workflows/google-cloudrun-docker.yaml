@@ -49,11 +49,11 @@ on:
     branches: [ "master" ]
 
 env:
-  PROJECT_ID: ${{ values.PROJECT_ID }}
-  GAR_NAME: ${{ values.GAR_NAME }}
-  GAR_LOCATION: ${{ values.GAR_LOCATION }}
-  SERVICE: ${{ values.SERVICE_NAME }}
-  REGION: ${{ values.REGION }}
+  PROJECT_ID: ${{ vars.PROJECT_ID }}
+  GAR_NAME: ${{ vars.GAR_NAME }}
+  GAR_LOCATION: ${{ vars.GAR_LOCATION }}
+  SERVICE: ${{ vars.SERVICE_NAME }}
+  REGION: ${{ vars.REGION }}
 
 jobs:
   deploy:
