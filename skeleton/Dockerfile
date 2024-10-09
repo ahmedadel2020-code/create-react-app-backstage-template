@@ -4,6 +4,10 @@ FROM node:16-alpine as build
 # Set working directory
 WORKDIR /app
 
+# Add arguments
+ARG DEPLOYMENT_STAGE=development
+ARG BUILD_COMMAND=build:development
+
 # Copy package.json and package-lock.json
 COPY package*.json ./
 
@@ -13,12 +17,8 @@ RUN npm install
 # Copy all files
 COPY . .
 
-# The build arg will be passed from the GitHub Actions workflow
-ARG DEPLOYMENT_STAGE=development
+# Build using the appropriate command based on deployment stage
 RUN npm run build:${DEPLOYMENT_STAGE}
-
-# # Build app
-# RUN npm run build
 
 # Serve stage
 FROM nginx:alpine
