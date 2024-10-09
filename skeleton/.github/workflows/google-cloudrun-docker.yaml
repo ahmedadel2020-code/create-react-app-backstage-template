@@ -73,10 +73,7 @@ jobs:
   deploy:
     # Add 'id-token' with the intended permissions for workload identity federation
     needs: [test]
-    if: |
-      ${{ values.deployment_stage == 'development' && contains(values.enabled_environments, 'development') }} ||
-      ${{ values.deployment_stage == 'staging' && contains(values.enabled_environments, 'staging') }} ||
-      ${{ values.deployment_stage == 'production' && contains(values.enabled_environments, 'production') }}
+    if: ${{ values.deployment_stage == values.enabled_environments }}
     permissions:
       contents: "read"
       id-token: "write"

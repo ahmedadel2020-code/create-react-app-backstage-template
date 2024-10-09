@@ -60,19 +60,14 @@ spec:
           description: Whether to include unit testing in the workflow
           default: true
         enabled_environments:
-          title: Enabled Environments
-          type: array
-          description: Which environments to enable in the workflow
-          items:
-            type: string
-            enum:
-              - development
-              - staging
-              - production
-          default: ["development"]
-          ui:widget: select
-          ui:options:
-            multiple: true
+          title: Enabled Environment
+          type: string
+          description: Which environment to enable in the workflow
+          enum:
+            - development
+            - staging
+            - production
+          default: development
     - title: Choose a location
       required:
         - repoUrl
