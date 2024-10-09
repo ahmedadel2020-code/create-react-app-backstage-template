@@ -61,13 +61,18 @@ spec:
           default: true
         enabled_environments:
           title: Enabled Environments
-          type: string
+          type: array
           description: Which environments to enable in the workflow
-          enum:
-            - development
-            - staging
-            - production
-          default: development
+          items:
+            type: string
+            enum:
+              - development
+              - staging
+              - production
+          default: ["development"]
+          ui:widget: select
+          ui:options:
+            multiple: true
     - title: Choose a location
       required:
         - repoUrl
@@ -134,10 +139,10 @@ spec:
           GAR_LOCATION: ${{ parameters.gar_location }}
           SERVICE_NAME: ${{ parameters.service_name }}
           REGION: ${{ parameters.region }}
-          BRANCH_NAME: ${{ parameters.branch_name }}
-          DEPLOYMENT_STAGE: ${{ parameters.deployment_stage }}
-          INCLUDE_UNIT_TESTS: ${{ parameters.include_unit_tests }}
-          ENABLED_ENVIRONMENTS: ${{ parameters.enabled_environments }}
+          branch_name: ${{ parameters.branch_name }}
+          deployment_stage: ${{ parameters.deployment_stage }}
+          include_unit_tests: ${{ parameters.include_unit_tests }}
+          enabled_environments: ${{ parameters.enabled_environments }}
 
     - id: publish
       name: Publish

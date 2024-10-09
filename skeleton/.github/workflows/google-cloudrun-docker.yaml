@@ -46,7 +46,7 @@ name: Build and Deploy to Cloud Run
 
 on:
   push:
-    branches: ["${{ values.BRANCH_NAME }}"]
+    branches: ["${{ values.branch_name }}"]
 
 env:
   PROJECT_ID: ${{ vars.PROJECT_ID }}
@@ -54,11 +54,11 @@ env:
   GAR_LOCATION: ${{ vars.GAR_LOCATION }}
   SERVICE: ${{ vars.SERVICE_NAME }}
   REGION: ${{ vars.REGION }}
-  DEPLOYMENT_STAGE: ${{ vars.DEPLOYMENT_STAGE }}
+  DEPLOYMENT_STAGE: ${{ vars.deployment_stage }}
 
 jobs:
   test:
-    if: ${{ values.INCLUDE_UNIT_TESTS }}
+    if: ${{ values.include_unit_tests }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -73,7 +73,10 @@ jobs:
   deploy:
     # Add 'id-token' with the intended permissions for workload identity federation
     needs: [test]
-    if: ${{ contains(values.ENABLED_ENVIRONMENTS, vars.DEPLOYMENT_STAGE) }}
+    if: |
+      ${{ values.deployment_stage == 'development' && contains(values.enabled_environments, 'development') }} ||
+      ${{ values.deployment_stage == 'staging' && contains(values.enabled_environments, 'staging') }} ||
+      ${{ values.deployment_stage == 'production' && contains(values.enabled_environments, 'production') }}
     permissions:
       contents: "read"
       id-token: "write"
