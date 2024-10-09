@@ -61,15 +61,13 @@ spec:
           default: true
         enabled_environments:
           title: Enabled Environments
-          type: array
+          type: string
           description: Which environments to enable in the workflow
-          items:
-            type: string
-            enum:
-              - development
-              - production
-          default: ["development"]
-          ui:widget: checkboxes
+          enum:
+            - development
+            - staging
+            - production
+          default: development
     - title: Choose a location
       required:
         - repoUrl
