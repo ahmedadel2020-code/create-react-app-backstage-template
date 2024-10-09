@@ -44,7 +44,7 @@ spec:
           title: Branch Name
           type: string
           description: The branch name to trigger the workflow (e.g., master, main)
-          default: main
+          default: master
         deployment_stage:
           title: Deployment Stage
           type: string
