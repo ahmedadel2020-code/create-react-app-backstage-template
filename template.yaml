@@ -33,6 +33,43 @@ spec:
           ui:options:
             allowedKinds:
               - Group
+    - title: GitHub Actions Configurations
+      required:
+        - branch_name
+        - deployment_stage
+        - include_unit_tests
+        - enabled_environments
+      properties:
+        branch_name:
+          title: Branch Name
+          type: string
+          description: The branch name to trigger the workflow (e.g., master, main)
+          default: main
+        deployment_stage:
+          title: Deployment Stage
+          type: string
+          description: The stage of deployment
+          enum:
+            - development
+            - staging
+            - production
+          default: development
+        include_unit_tests:
+          title: Include Unit Tests
+          type: boolean
+          description: Whether to include unit testing in the workflow
+          default: true
+        enabled_environments:
+          title: Enabled Environments
+          type: array
+          description: Which environments to enable in the workflow
+          items:
+            type: string
+            enum:
+              - development
+              - production
+          default: ["development"]
+          ui:widget: checkboxes
     - title: Choose a location
       required:
         - repoUrl
@@ -73,7 +110,7 @@ spec:
           title: Cloud Run Region
           type: string
           description: The region where the Cloud Run service will be deployed.
-    
+
     - title: GCP Credentials
       required:
         - gcp_credentials
@@ -99,8 +136,11 @@ spec:
           GAR_LOCATION: ${{ parameters.gar_location }}
           SERVICE_NAME: ${{ parameters.service_name }}
           REGION: ${{ parameters.region }}
+          BRANCH_NAME: ${{ parameters.branch_name }}
+          DEPLOYMENT_STAGE: ${{ parameters.deployment_stage }}
+          INCLUDE_UNIT_TESTS: ${{ parameters.include_unit_tests }}
+          ENABLED_ENVIRONMENTS: ${{ parameters.enabled_environments }}
 
-    
     - id: publish
       name: Publish
       action: publish:github

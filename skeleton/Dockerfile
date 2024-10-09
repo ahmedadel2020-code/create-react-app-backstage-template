@@ -13,8 +13,12 @@ RUN npm install
 # Copy all files
 COPY . .
 
-# Build app
-RUN npm run build
+# The build arg will be passed from the GitHub Actions workflow
+ARG DEPLOYMENT_STAGE=development
+RUN npm run build:${DEPLOYMENT_STAGE}
+
+# # Build app
+# RUN npm run build
 
 # Serve stage
 FROM nginx:alpine
