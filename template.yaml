@@ -130,6 +130,7 @@ spec:
     - id: create-env-dev
       name: Create Development Environment
       action: github:environment:create
+      if: ${{ parameters.enabled_environments == 'development' }}
       input:
         repoUrl: ${{ parameters.repoUrl }}
         name: development
@@ -146,7 +147,7 @@ spec:
     - id: create-env-staging
       name: Create Staging Environment
       action: github:environment:create
-      if: ${{ parameters.enabled_environments == 'staging' || parameters.enabled_environments == 'production' }}
+      if: ${{ parameters.enabled_environments == 'staging' }}
       input:
         repoUrl: ${{ parameters.repoUrl }}
         name: staging
@@ -206,13 +207,6 @@ spec:
         repoUrl: ${{ parameters.repoUrl }}
 
     - id: register
-      name: Register
-      action: catalog:register
-      input:
-        repoContentsUrl: ${{ steps.publish.output.repoContentsUrl }}
-        catalogInfoPath: "/catalog-info.yaml"
-
-    - id: wait
       name: Register
       action: catalog:register
       input:
