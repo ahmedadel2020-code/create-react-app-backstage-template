@@ -81,6 +81,16 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
+      - name: Debug Environment Variables
+        run: |
+          echo "Current environment: ${{ github.event.deployment.environment }}"
+          echo "Project ID: ${{ vars.PROJECT_ID }}"
+          echo "GAR Name: ${{ vars.GAR_NAME }}"
+          echo "GAR Location: ${{ vars.GAR_LOCATION }}"
+          echo "Service Name: ${{ vars.SERVICE_NAME }}"
+          echo "Region: ${{ vars.REGION }}"
+          echo "Deployment Stage: ${{ vars.DEPLOYMENT_STAGE }}"
+
       - name: Google Auth
         id: auth
         uses: "google-github-actions/auth@v2"
