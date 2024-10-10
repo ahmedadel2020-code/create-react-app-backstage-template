@@ -10,14 +10,14 @@ ARG DEPLOYMENT_STAGE=development
 # Copy package.json and package-lock.json
 COPY package*.json ./
 
-# Build app based on deployment stage
-RUN npm run build:${DEPLOYMENT_STAGE}
+# Install dependencies including dev dependencies
+RUN npm install --include=dev
 
 # Copy all files
 COPY . .
 
-# Build app
-RUN npm run build
+# Build app based on deployment stage
+RUN npm run build:${DEPLOYMENT_STAGE}
 
 # Serve stage
 FROM nginx:alpine

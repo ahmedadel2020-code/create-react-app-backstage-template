@@ -116,40 +116,26 @@ jobs:
 
       # Authenticate Docker to Google Cloud Artifact Registry
       - name: Docker Auth
-        env:
-          PROJECT_ID: ${{ values.PROJECT_ID }}
-          GAR_LOCATION: ${{ values.GAR_LOCATION }}
         run: |-
-          gcloud auth configure-docker "${{ values.GAR_LOCATION }}-docker.pkg.dev"
+          gcloud auth configure-docker "${{ env.GAR_LOCATION }}-docker.pkg.dev"
 
       - name: Build and Push Container
-        env:
-          PROJECT_ID: ${{ values.PROJECT_ID }}
-          GAR_LOCATION: ${{ values.GAR_LOCATION }}
-          GAR_NAME: ${{ values.GAR_NAME }}
-          SERVICE: ${{ values.SERVICE_NAME }}
-          DEPLOYMENT_STAGE: ${{ values.deployment_stage }}
         run: |-
           docker build \
-            --build-arg DEPLOYMENT_STAGE=${{ values.deployment_stage }} \
-            -t "${{ values.GAR_LOCATION }}-docker.pkg.dev/${{ values.PROJECT_ID }}/${{ values.GAR_NAME }}/${{ values.SERVICE_NAME }}:${{ github.sha }}" ./
-          docker push "${{ values.GAR_LOCATION }}-docker.pkg.dev/${{ values.PROJECT_ID }}/${{ values.GAR_NAME }}/${{ values.SERVICE_NAME }}:${{ github.sha }}"
+            --build-arg DEPLOYMENT_STAGE=${{ env.DEPLOYMENT_STAGE }} \
+            -t "${{ env.GAR_LOCATION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.GAR_NAME }}/${{ env.SERVICE }}:${{ github.sha }}" ./
+          docker push "${{ env.GAR_LOCATION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.GAR_NAME }}/${{ env.SERVICE }}:${{ github.sha }}"
 
       # END - Docker auth and build
 
       - name: Deploy to Cloud Run
         id: deploy
-        env:
-          PROJECT_ID: ${{ values.PROJECT_ID }}
-          GAR_LOCATION: ${{ values.GAR_LOCATION }}
-          GAR_NAME: ${{ values.GAR_NAME }}
-          SERVICE: ${{ values.SERVICE_NAME }}
-          REGION: ${{ values.REGION }}
         uses: google-github-actions/deploy-cloudrun@v2
         with:
-          service: ${{ values.SERVICE_NAME }}
-          region: ${{ values.REGION }}
-          image: ${{ values.GAR_LOCATION }}-docker.pkg.dev/${{ values.PROJECT_ID }}/${{ values.GAR_NAME }}/${{ values.SERVICE_NAME }}:${{ github.sha }}
+          service: ${{ env.SERVICE }}
+          region: ${{ env.REGION }}
+          # NOTE: If using a pre-built image, update the image name here
+          image: ${{ env.GAR_LOCATION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.GAR_NAME }}/${{ env.SERVICE }}:${{ github.sha }}
 
       # If required, use the Cloud Run url output in later steps
       - name: Show Output
