@@ -178,18 +178,6 @@ spec:
         secrets:
           GCP_CREDENTIALS: ${{ parameters.gcp_credentials }}
 
-    - id: wait-for-env
-      name: Wait for Environment Setup
-      action: debug:log
-      input:
-        message: Waiting for environment setup to complete...
-
-    - id: delay
-      name: Add Delay for Environment Propagation
-      action: debug:wait
-      input:
-        seconds: 60
-
     - id: template
       name: Fetch Skeleton + Template
       action: fetch:template
