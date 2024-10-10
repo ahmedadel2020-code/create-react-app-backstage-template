@@ -188,7 +188,7 @@ spec:
       name: Add Delay for Environment Propagation
       action: debug:wait
       input:
-        seconds: 300
+        seconds: 60
 
     - id: template
       name: Fetch Skeleton + Template
