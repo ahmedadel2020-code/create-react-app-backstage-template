@@ -119,6 +119,63 @@ spec:
           description: Base64 encoded GCP service account key JSON
           ui:widget: textarea
   steps:
+    - id: create-repo
+      name: Create Repository
+      action: github:repo:create
+      input:
+        repoUrl: ${{ parameters.repoUrl }}
+        description: This is ${{ parameters.component_id }}
+        repoVisibility: public
+
+    - id: create-env-dev
+      name: Create Development Environment
+      action: github:environment:create
+      input:
+        repoUrl: ${{ parameters.repoUrl }}
+        name: development
+        environmentVariables:
+          PROJECT_ID: ${{ parameters.project_id }}
+          GAR_NAME: ${{ parameters.gar_name }}
+          GAR_LOCATION: ${{ parameters.gar_location }}
+          SERVICE_NAME: ${{ parameters.service_name }}
+          REGION: ${{ parameters.region }}
+          DEPLOYMENT_STAGE: ${{ parameters.deployment_stage }}
+        secrets:
+          GCP_CREDENTIALS: ${{ parameters.gcp_credentials }}
+
+    - id: create-env-staging
+      name: Create Staging Environment
+      action: github:environment:create
+      if: ${{ parameters.enabled_environments == 'staging' || parameters.enabled_environments == 'production' }}
+      input:
+        repoUrl: ${{ parameters.repoUrl }}
+        name: staging
+        environmentVariables:
+          PROJECT_ID: ${{ parameters.project_id }}
+          GAR_NAME: ${{ parameters.gar_name }}
+          GAR_LOCATION: ${{ parameters.gar_location }}
+          SERVICE_NAME: ${{ parameters.service_name }}
+          REGION: ${{ parameters.region }}
+          DEPLOYMENT_STAGE: staging
+        secrets:
+          GCP_CREDENTIALS: ${{ parameters.gcp_credentials }}
+
+    - id: create-env-prod
+      name: Create Production Environment
+      action: github:environment:create
+      if: ${{ parameters.enabled_environments == 'production' }}
+      input:
+        repoUrl: ${{ parameters.repoUrl }}
+        name: production
+        environmentVariables:
+          PROJECT_ID: ${{ parameters.project_id }}
+          GAR_NAME: ${{ parameters.gar_name }}
+          GAR_LOCATION: ${{ parameters.gar_location }}
+          SERVICE_NAME: ${{ parameters.service_name }}
+          REGION: ${{ parameters.region }}
+          DEPLOYMENT_STAGE: production
+        secrets:
+          GCP_CREDENTIALS: ${{ parameters.gcp_credentials }}
     - id: template
       name: Fetch Skeleton + Template
       action: fetch:template
@@ -147,16 +204,15 @@ spec:
           - github.com
         description: This is ${{ parameters.component_id }}
         repoUrl: ${{ parameters.repoUrl }}
-        repoVariables:
-          PROJECT_ID: ${{ parameters.project_id }}
-          GAR_NAME: ${{ parameters.gar_name }}
-          GAR_LOCATION: ${{ parameters.gar_location }}
-          SERVICE_NAME: ${{ parameters.service_name }}
-          REGION: ${{ parameters.region }}
-        secrets:
-          GCP_CREDENTIALS: ${{ parameters.gcp_credentials }}
 
     - id: register
+      name: Register
+      action: catalog:register
+      input:
+        repoContentsUrl: ${{ steps.publish.output.repoContentsUrl }}
+        catalogInfoPath: "/catalog-info.yaml"
+
+    - id: wait
       name: Register
       action: catalog:register
       input:

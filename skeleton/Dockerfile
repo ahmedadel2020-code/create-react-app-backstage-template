@@ -4,15 +4,14 @@ FROM node:16-alpine as build
 # Set working directory
 WORKDIR /app
 
-# Add arguments
-# ARG DEPLOYMENT_STAGE=development
-# ARG BUILD_COMMAND=build:development
+# Add deployment stage argument with default
+ARG DEPLOYMENT_STAGE=development
 
 # Copy package.json and package-lock.json
 COPY package*.json ./
 
-# Install dependencies
-RUN npm install
+# Build app based on deployment stage
+RUN npm run build:${DEPLOYMENT_STAGE}
 
 # Copy all files
 COPY . .
