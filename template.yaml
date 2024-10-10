@@ -197,6 +197,7 @@ spec:
           deployment_stage: ${{ parameters.deployment_stage }}
           include_unit_tests: ${{ parameters.include_unit_tests }}
           enabled_environments: ${{ parameters.enabled_environments }}
+          gcp_credentials: ${{ parameters.gcp_credentials }}
 
     - id: publish
       name: Publish

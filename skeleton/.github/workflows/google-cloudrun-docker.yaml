@@ -97,13 +97,13 @@ jobs:
           echo "GAR Location: ${{ values.GAR_LOCATION }}"
           echo "Service Name: ${{ values.SERVICE_NAME }}"
           echo "Region: ${{ values.REGION }}"
-          echo "Deployment Stage: ${{ values.DEPLOYMENT_STAGE }}"
+          echo "Deployment Stage: ${{ values.deployment_stage }}"
 
       - name: Google Auth
         id: auth
         uses: "google-github-actions/auth@v2"
         with:
-          credentials_json: "${{ secrets.GCP_CREDENTIALS }}"
+          credentials_json: "${{ values.gcp_credentials }}"
 
       # NOTE: Alternative option - authentication via credentials json
       # - name: Google Auth
@@ -128,10 +128,10 @@ jobs:
           GAR_LOCATION: ${{ values.GAR_LOCATION }}
           GAR_NAME: ${{ values.GAR_NAME }}
           SERVICE: ${{ values.SERVICE_NAME }}
-          DEPLOYMENT_STAGE: ${{ values.DEPLOYMENT_STAGE }}
+          DEPLOYMENT_STAGE: ${{ values.deployment_stage }}
         run: |-
           docker build \
-            --build-arg DEPLOYMENT_STAGE=${{ values.DEPLOYMENT_STAGE }} \
+            --build-arg DEPLOYMENT_STAGE=${{ values.deployment_stage }} \
             -t "${{ values.GAR_LOCATION }}-docker.pkg.dev/${{ values.PROJECT_ID }}/${{ values.GAR_NAME }}/${{ values.SERVICE_NAME }}:${{ github.sha }}" ./
           docker push "${{ values.GAR_LOCATION }}-docker.pkg.dev/${{ values.PROJECT_ID }}/${{ values.GAR_NAME }}/${{ values.SERVICE_NAME }}:${{ github.sha }}"
 
