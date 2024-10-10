@@ -188,14 +188,8 @@ spec:
       name: Add Delay for Environment Propagation
       action: debug:wait
       input:
-        seconds: 60
+        seconds: 120
 
-    - id: verify-env
-      name: Verify Environment Setup
-      action: github:environment:read
-      input:
-        repoUrl: ${{ parameters.repoUrl }}
-        name: ${{ parameters.enabled_environments }}
     - id: template
       name: Fetch Skeleton + Template
       action: fetch:template
