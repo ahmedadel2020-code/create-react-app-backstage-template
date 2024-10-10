@@ -48,14 +48,6 @@ on:
   push:
     branches: ["${{ values.branch_name }}"]
 
-env:
-  PROJECT_ID: ${{ vars.PROJECT_ID }}
-  GAR_NAME: ${{ vars.GAR_NAME }}
-  GAR_LOCATION: ${{ vars.GAR_LOCATION }}
-  SERVICE: ${{ vars.SERVICE_NAME }}
-  REGION: ${{ vars.REGION }}
-  DEPLOYMENT_STAGE: ${{ vars.deployment_stage }}
-
 jobs:
   test:
     if: ${{ values.include_unit_tests }}
